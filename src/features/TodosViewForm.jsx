@@ -1,4 +1,27 @@
  import { useState, useEffect } from 'react'
+ import styled from 'styled-components'
+
+ const StyledForm = styled.form`
+  padding: 0.5rem;
+`
+const StyledDiv = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+`
+const StyledButton = styled.button`
+  padding: 0.4rem 0.75rem;
+`
+const StyledLabel = styled.label`
+  font-weight: 600;
+`
+const StyledSelect = styled.select`
+  padding: 0.4rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #c4c9d4;
+  font-size: 0.95rem;
+`
 function TodosViewForm({ 
     sortDirection,
     setSortDirection,
