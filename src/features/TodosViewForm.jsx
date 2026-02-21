@@ -1,3 +1,27 @@
+ import { useState, useEffect } from 'react'
+ import styled from 'styled-components'
+
+ const StyledForm = styled.form`
+  padding: 0.5rem;
+`
+const StyledDiv = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+`
+const StyledButton = styled.button`
+  padding: 0.4rem 0.75rem;
+`
+const StyledLabel = styled.label`
+  font-weight: 600;
+`
+const StyledSelect = styled.select`
+  padding: 0.4rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #c4c9d4;
+  font-size: 0.95rem;
+`
 function TodosViewForm({ 
     sortDirection,
     setSortDirection,
@@ -6,6 +30,17 @@ function TodosViewForm({
     queryString, 
     setQueryString 
 }) {
+    const [localQueryString, setLocalQueryString] = useState(queryString)
+    useEffect(() => {
+    const debounce = setTimeout(() => {
+      setQueryString(localQueryString);
+    }, 500);
+
+    return () => {
+      clearTimeout(debounce);
+    };
+     }, [localQueryString, setQueryString]);
+  
   const preventRefresh = (e) => {
     e.preventDefault();
   };
@@ -16,12 +51,12 @@ function TodosViewForm({
         <input
           id="search"
           type="text"
-          value={queryString}
-          onChange={(e) => setQueryString(e.target.value)}
+          value={localQueryString}
+          onChange={(e) => setLocalQueryString(e.target.value)}
         />
         <button
             type="button"
-            onClick={() => setQueryString("")}
+            onClick={() => setLocalQueryString("")}
                 >
             Clear
         </button>

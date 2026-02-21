@@ -1,6 +1,16 @@
-import { useRef } from "react"
-import { useState } from 'react'
+import { useRef, useState } from "react"
 import TextInputWithLabel from "../shared/TextInputWithLabel.jsx"
+import styled from 'styled-components'
+
+const StyledForm = styled.form`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+`
+const StyledButton = styled.button`
+  font-style: ${(props) => props.disabled ? 'italic' : 'normal'};
+`
 
 function TodoForm({onAddTodo, isSaving}) {
     const todoTitleInput = useRef("");
