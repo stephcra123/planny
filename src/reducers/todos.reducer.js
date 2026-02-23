@@ -3,10 +3,6 @@ const initialState = {
     isLoading: false,
     errorMessage: "",
     isSaving: false,
-    //May add these later
-    //sortField: "createdTime",
-    //sortDirection: "desc",
-    //queryString: "",
 };
 const actions = {
     //actions in useEffect that loads todos
@@ -43,11 +39,12 @@ function reducer(state = initialState, action) {
             title: record.fields.Title,
             isCompleted: record.fields.isCompleted || false
         })),
+        isLoading: false,
       };
     case actions.setLoadError:
       return {
         ...state,
-        errorMessage: action.payload,
+        errorMessage: action.error.message,
         isLoading: false,
       };
     //Add Todo Cases
@@ -56,40 +53,59 @@ function reducer(state = initialState, action) {
         ...state,
         isSaving: true,
       };
-    case actions.addTodo:
-      return {
+    case actions.addTodo:{
+        const savedTodo = {
+            id: action.records[0].id,
+            title: action.records[0].fields.Title,
+            isCompleted: action.records[0].fields.isCompleted || false
+        };
+        return {
         ...state,
-        todoList: [...state.todoList, action.payload],
+        todoList: [...state.todoList, savedTodo],
         isSaving: false,
-      };
+        };
+    }
     case actions.endRequest:
       return {
         ...state,
         isSaving: false,
+        isLoading: false,
       };
-    //???case actions.setLoadError: ???
-    //  return {
-    //    ...state,
-    //    errorMessage: action.payload,
-    //    isLoading: false,
-    //  };
-
     //Update and Complete Todo Cases
-    case actions.updateTodo:
-      return {
-        ...state,
-        todoList: state.todoList.map(todo => todo.id === action.payload.id ? action.payload : todo),
-      };
-    case actions.completeTodo:
-      return {
-        ...state,
-        todoList: state.todoList.map(todo => todo.id === action.payload.id ? { ...todo, isCompleted: !todo.isCompleted } : todo),
-      };
-    case actions.revertTodo:
-      return {
-        ...state,
-        todoList: action.payload,
-      };
+    case actions.updateTodo:{
+        const updatedTodos = state.todoList.map((todo) => {
+            if (todo.id === action.editedTodo.id) {
+                return { ...todo, title: action.editedTodo.title };
+            }
+            return todo;
+        });
+        const updatedState = { ...state, todoList: updatedTodos };
+        if (action.error) {
+            updatedState.errorMessage = action.error.message;}
+      return updatedState;
+    }
+    case actions.completeTodo:{
+        const updatedTodos = state.todoList.map((todo) => {
+            if (todo.id === action.todoId) {
+                return { ...todo, isCompleted: true };
+            }
+      return todo;
+    });
+    return{ ...state, todoList:updatedTodos };
+    }
+    case actions.revertTodo: {
+        const updatedTodos = state.todoList.map((todo) => {
+            if (todo.id === action.originalTodo.id) {
+            return action.originalTodo;
+        }
+    return todo;
+ });
+        const updatedState = { ...state, todoList: updatedTodos };
+            if (action.error) {
+            updatedState.errorMessage = action.error.message;
+            }
+        return updatedState;
+}
     //Dismiss Error Case
     case actions.clearError:
       return {
