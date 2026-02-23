@@ -4,11 +4,20 @@
   import TodosViewForm from './features/TodosViewForm.jsx'
   import './App.css'                    
   import styles from './App.module.css'
+  import {
+    reducer as todosReducer,
+    actions as todoActions,
+    initialState as initialTodosState,
+  }  from './reducers/todos.reducer';
+  import { useReducer } from 'react';
+
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
   //const encodeUrl = ({ sortField, sortDirection, queryString }) => 
   function App() {
+    const [todoState, dispatch] = useReducer(todosReducer, initialTodosState);
+
     const [todoList, setTodoList] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
@@ -37,12 +46,7 @@
           const resp = await fetch(encodeUrl(), options)
           if(!resp.ok) {throw new Error(resp.message)}
           const data = await resp.json();
-          const todos = data.records.map((record) => ({
-            id: record.id,
-            title: record.fields.Title,
-            isCompleted: record.fields.isCompleted || false
-          }));
-          setTodoList(todos); 
+          dispatch({ type: todoActions.loadTodos, records: data.records });
         }
         catch (error) {throw new Error(error.message)}
         finally {setIsLoading(false)}
