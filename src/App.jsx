@@ -1,31 +1,39 @@
-  import TodoList from './features/TodoList/TodoList.jsx'
-  import TodoForm from './features/TodoForm.jsx'
-  import { useState, useEffect, useCallback } from 'react'
-  import TodosViewForm from './features/TodosViewForm.jsx'
-  import './App.css'                    
-  import styles from './App.module.css'
-  import {
+import TodoList from './features/TodoList/TodoList.jsx'
+import TodoForm from './features/TodoForm.jsx'
+import { useState, useEffect, useCallback } from 'react'
+import TodosViewForm from './features/TodosViewForm.jsx'
+import './App.css'                    
+import styles from './App.module.css'
+import {
     reducer as todosReducer,
     actions as todoActions,
     initialState as initialTodosState,
   }  from './reducers/todos.reducer';
-  import { useReducer } from 'react';
+import { useReducer } from 'react';
+import TodosPage from './pages/TodosPage.jsx'
+import Header from './shared/Header.jsx'
+import About from './pages/About.jsx'
+import NotFound from './pages/NotFound.jsx'
+import { useLocation, Routes, Route } from 'react-router'
 
-  const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
-  const token = `Bearer ${import.meta.env.VITE_PAT}`;
+const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
+const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
-  //const encodeUrl = ({ sortField, sortDirection, queryString }) => 
-  function App() {
+function App() {
     const [todoState, dispatch] = useReducer(todosReducer, initialTodosState);
-
-    //const [todoList, setTodoList] = useState([])
-    //const [isLoading, setIsLoading] = useState(false)
-    //const [errorMessage, setErrorMessage] = useState("")
-    //const [isSaving, setIsSaving] = useState(false)
     const [sortField, setSortField] = useState("createdTime")
     const [sortDirection, setSortDirection] = useState("desc")
     const [queryString, setQueryString] = useState("")
-    const encodeUrl = useCallback(()=>{
+    const location = useLocation();
+    useEffect(() => {
+      if(location.pathname === "/") {
+        document.title = "Todo List"}
+      else if (location.pathname === "/about") {
+        document.title = "About"}
+        else {document.title = "Not Found"}
+    }, [location.pathname])
+
+  const encodeUrl = useCallback(()=>{
   let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
   let searchQuery = "";
   if (queryString) {
@@ -157,23 +165,25 @@
 
     return (
       <div className={styles.app}>
-        <h1>My Todos</h1>
-        <TodoForm onAddTodo={addTodo} isSaving={todoState.isSaving} />
-        <TodoList
-          onUpdateTodo={updateTodo} 
-          todoList={todoState.todoList}
-          onCompleteTodo={completeTodo}
-          isLoading={todoState.isLoading}
-          />
-           <hr />
-            <TodosViewForm 
-             sortDirection={sortDirection}
-             setSortDirection={setSortDirection}
-             sortField={sortField}
-             setSortField={setSortField}
-             queryString={queryString}
-             setQueryString={setQueryString}
-           />
+        <Header title="My Todos" />
+        <Routes>
+        <Route path="/" element={<TodosPage
+          todoState={todoState}
+          addTodo={addTodo}
+          updateTodo={updateTodo}
+          completeTodo={completeTodo}
+          sortDirection={sortDirection}
+          setSortDirection={setSortDirection}
+          sortField={sortField}
+          setSortField={setSortField}
+          queryString={queryString}
+          setQueryString={setQueryString}
+          dispatch={dispatch}
+          todoActions={todoActions}
+        />} />
+        <Route path="/about" element={<About />} />
+        <Route path="*" element={<NotFound />} /> 
+        </Routes>    
         {todoState.errorMessage && (
         <div className={styles.error}>
           <hr />
