@@ -31,7 +31,7 @@ function TodoForm({onAddTodo, isSaving}) {
                 onChange={(e) => setWorkingTodoTitle(e.target.value)}
                 value= {workingTodoTitle}
                 elementId = "todoTitle"
-                labeltext = "Todo"
+                label = "Todo"
             /> 
             <button disabled={workingTodoTitle.trim() === ''}>
                 {isSaving ? 'Saving...' : 'Add Todo'}
