@@ -1,3 +1,11 @@
+import styled from 'styled-components'
+
+const StyledLabel = styled.label`
+  margin-right: 0.25rem;
+`
+const StyledInput = styled.input`
+  padding: 0.4rem 0.5rem;
+`
 function TextInputWithLabel({
   elementId,
   label,

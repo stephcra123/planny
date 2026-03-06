@@ -1,9 +1,14 @@
 import { useState } from "react"
+import { useEffect } from "react"
 import TextInputWithLabel from "../../shared/TextInputWithLabel.jsx"
+import styles from './TodoListItem.module.css'
 
 function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
   const [isEditing, setIsEditing] = useState(false)
   const [workingTitle, setWorkingTitle] = useState(todo.title)
+  useEffect(() => {
+    setWorkingTitle(todo.title);
+  }, [todo]);
   
   function handleCancel() {
     setWorkingTitle(todo.title)
@@ -22,7 +27,7 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
   }
  
   return (
-    <li>
+    <li className={styles.item}>
       <form>
         {isEditing ? (
           <>
