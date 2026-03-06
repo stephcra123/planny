@@ -26,7 +26,11 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
       <form>
         {isEditing ? (
           <>
-            <TextInputWithLabel value={workingTitle} onChange={handleEdit}/>
+            <TextInputWithLabel 
+              elementId={`todo-${todo.id}`}
+              label="Todo"
+              value={workingTitle} 
+              onChange={handleEdit}/>
             <button
               type="button"
               onClick={handleCancel}
