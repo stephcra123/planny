@@ -25,19 +25,18 @@ function TodoForm({onAddTodo, isSaving}) {
         
     }
     return(
-        <form onSubmit={handleAddTodo}>
-            <TextInputWithLabel
-                ref = {todoTitleInput}
-                onChange={(e) => setWorkingTodoTitle(e.target.value)}
-                value= {workingTodoTitle}
-                elementId = "todoTitle"
-                labeltext = "Todo"
-            /> 
-            <button disabled={workingTodoTitle.trim() === ''}>
-                {isSaving ? 'Saving...' : 'Add Todo'}
-            </button>
-
-        </form>
+         <StyledForm onSubmit={handleAddTodo}>
+                    <TextInputWithLabel
+                        ref={todoTitleInput}
+                        onChange={(e) => setWorkingTodoTitle(e.target.value)}
+                        value={workingTodoTitle}
+                        elementId="todoTitle"
+                        labeltext="Todo"
+                    /> 
+                    <StyledButton disabled={workingTodoTitle.trim() === ''}>
+                        {isSaving ? 'Saving...' : 'Add Todo'}
+                    </StyledButton>
+                </StyledForm>
     )
 }
 export default TodoForm
