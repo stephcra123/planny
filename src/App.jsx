@@ -36,6 +36,7 @@
     }, [])
 
     const updateTodo = async (editedTodo) => {
+      setIsSaving(true);
       const originalTodo = todoList.find((todo) => todo.id === editedTodo.id);
       const updatedTodos = todoList.map((todo) => {
       if (todo.id === editedTodo.id) {
@@ -125,6 +126,7 @@
       }
     }
     const completeTodo = async (todoId) => {
+      setIsSaving(true);
       const originalTodo = todoList.find((todo) => todo.id === todoId);
       const updatedTodos = todoList.map((todo) => {
           if (todo.id === todoId) {
