@@ -15,8 +15,8 @@ function TextInputWithLabel({
 }) {
   return (
     <>
-      <label htmlFor={elementId}>{label}</label>
-      <input
+      <StyledLabel htmlFor={elementId}>{label}</StyledLabel>
+      <StyledInput
         type="text"
         id={elementId}
         ref={ref}
